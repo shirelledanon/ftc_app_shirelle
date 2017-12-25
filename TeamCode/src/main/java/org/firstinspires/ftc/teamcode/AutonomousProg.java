@@ -18,41 +18,13 @@ public class AutonomousProg extends LinearOpMode {
 
 
         RobotClass Robot = new RobotClass(hardwareMap);
-
         waitForStart();
         runtime.reset();
 
 
 
-        while (runtime.time() < 2.5) {
-            double fix = Robot.PID(Robot.getGyroAngle(), 0, 0.013, 0.005, 0.005);
-            Robot.Drive(-0.2 - fix, -0.2 + fix);
-        }
-
-        Robot.StopRobot(100);
-
-        runtime.reset();
-        while (runtime.time() < 1) {
-            Robot.Drive(+0.3, -0.3);
-        }
-        Robot.StopRobot(100);
-
-        runtime.reset();
-        while (runtime.time() < 0.5) {
-            double fix = Robot.PID(Robot.getGyroAngle(), 0, 0.013, 0.005, 0.005);
-            Robot.Drive(0.2, 0.2 + fix);
-        }
-
-        Robot.StopRobot(100);
-
-        Robot.setSlidePower(0.8);
-        Thread.sleep(3000);
-
-
     }
-
 }
-
 
 
 

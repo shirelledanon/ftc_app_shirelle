@@ -1,12 +1,8 @@
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
 /**
  * Created by talyo on 22/12/2017.
@@ -26,7 +22,7 @@ public class RobotClass {
 
     private DcMotor LeftSlide = null;
     private DcMotor RightSlide = null;
-    private BNO055IMU gyro;
+
     //last error double is used for the PID controller later this program
     private double lastError = 0;
 
@@ -44,10 +40,6 @@ public class RobotClass {
         LeftSlide = hardwareMap.dcMotor.get("left");
         RightSlide = hardwareMap.dcMotor.get("right");
 
-        //declares the gyro sensor and calibrates it
-        gyro = hardwareMap.get(BNO055IMU.class, "gyro");
-        BNO055IMU.Parameters p = new BNO055IMU.Parameters();
-        gyro.initialize(p);
 
         //sets the direction of the left driving motor and left motor of the slide
         //REVERSE, because they should work as a mirror of the right motors.
@@ -82,19 +74,25 @@ public class RobotClass {
         //sets the mode to STOP_AND_RESET_ENCODER
         LeftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         RightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        RightDrivef.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        LeftDrivef.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         //sets the target position to each motor
         LeftDrive.setTargetPosition((int) position);
         RightDrive.setTargetPosition((int) position);
+        LeftDrivef.setTargetPosition((int) position);
+        RightDrivef.setTargetPosition((int) position);
 
         //sets the mode to RUN_TO_POSITION, so each motor will move to his target position
         LeftDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         RightDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        LeftDrivef.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        RightDrivef.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         //drives each motor to the target position
         Drive(0.6, 0.6);
 
-        while (LeftDrive.isBusy() && RightDrive.isBusy()) {
+        while (LeftDrive.isBusy() && RightDrive.isBusy() && LeftDrivef.isBusy() && RightDrivef.isBusy()) {
             //waits for the action to end
         }
 
@@ -104,19 +102,18 @@ public class RobotClass {
         //sets the mode back to RUN_USING_ENCODER
         LeftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         RightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        LeftDrivef.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        RightDrivef.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
 
     public void StopRobot(int timeInMills) throws InterruptedException {
         LeftDrive.setPower(0);
         RightDrive.setPower(0);
+        LeftDrivef.setPower(0);
+        RightDrivef.setPower(0);
         Thread.sleep(timeInMills);
 
-        BNO055IMU.Parameters p = new BNO055IMU.Parameters();
-        gyro.initialize(p);
-        while (gyro.isGyroCalibrated() == false) {
-
-        }
 
     }
 
@@ -126,11 +123,6 @@ public class RobotClass {
         RightSlide.setPower(power);
     }
 
-    public double getGyroAngle() {
-        Orientation a = gyro.getAngularOrientation().toAngleUnit(AngleUnit.DEGREES);
-        double nowAngle = a.angleUnit.toDegrees(a.firstAngle);
-        return nowAngle;
-    }
 
     public double PID(double Correct, double target, double kp, double ki, double kd) {
         double P = 0;
