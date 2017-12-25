@@ -15,6 +15,7 @@ public class SimpleDriveOpMode extends OpMode  {
     DcMotor rightwheel1 ;
     DcMotor leftwheel1 ;
  DcMotor leftwheel;
+
      public void  init (){
          leftwheel = hardwareMap.dcMotor.get("leftwheelfront");
          leftwheel1 = hardwareMap.dcMotor.get("leftwheelback");
