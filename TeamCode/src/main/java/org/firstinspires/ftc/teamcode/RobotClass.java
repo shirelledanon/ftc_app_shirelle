@@ -19,8 +19,11 @@ public class RobotClass {
     private final static double ONE_TICK_TO_CM = WHEEL_CIRCUMFERENCE / TICKS_PER_REV;
 
     //creates variables all motors and sensors
-    public DcMotor LeftDrive = null;
-    public DcMotor RightDrive = null;
+    private DcMotor LeftDrive = null;
+    private DcMotor RightDrive = null;
+    private DcMotor RightDrivef = null;
+    private DcMotor LeftDrivef = null;
+
     private DcMotor LeftSlide = null;
     private DcMotor RightSlide = null;
     private BNO055IMU gyro;
@@ -35,6 +38,9 @@ public class RobotClass {
         hardwareMap = hwMap;
         LeftDrive = hardwareMap.dcMotor.get("leftDrive");
         RightDrive = hardwareMap.dcMotor.get("rightDrive");
+        LeftDrivef = hardwareMap.dcMotor.get("leftDrivef");
+        RightDrivef = hardwareMap.dcMotor.get("rightDrivef");
+
         LeftSlide = hardwareMap.dcMotor.get("left");
         RightSlide = hardwareMap.dcMotor.get("right");
 
@@ -59,6 +65,8 @@ public class RobotClass {
     public void Drive(double powerRight, double powerLeft) {
         LeftDrive.setPower(powerLeft);
         RightDrive.setPower(powerRight);
+        LeftDrivef.setPower(powerLeft);
+        RightDrivef.setPower(powerRight);
     }
 
     public void DriveByTime(double powerRight, double powerLeft, int timeInMills) throws InterruptedException {

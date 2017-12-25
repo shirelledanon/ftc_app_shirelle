@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 /**
  * Created by talyo on 19/12/2017.
  */
-@Autonomous(name = "Autonomous Prog.")
+@Autonomous(name = "Autonomous final")
 public class AutonomousProg extends LinearOpMode {
 
     ElapsedTime runtime = new ElapsedTime();
