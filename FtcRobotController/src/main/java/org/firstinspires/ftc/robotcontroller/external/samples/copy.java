@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 /**
  * Created by Shirelle on 12/23/2017.
  */
-
+//YUNGI
 public class copy extends LinearOpMode {
     /* Declare OpMode members. */
     ftc       robot   = new ftchardware();   // Use a Pushbot's hardware
