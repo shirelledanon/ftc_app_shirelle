@@ -4,6 +4,12 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
+import org.firstinspires.ftc.robotcore.external.ClassFactory;
+import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
+
 /**
  * Created by talyo on 22/12/2017.
  */
@@ -13,7 +19,8 @@ public class RobotClass {
     private final static double WHEEL_CIRCUMFERENCE = 2 * Math.PI * 5.08;
     private final static double TICKS_PER_REV = 1120;
     private final static double ONE_TICK_TO_CM = WHEEL_CIRCUMFERENCE / TICKS_PER_REV;
-
+    private VuforiaTrackable relicTemplate;
+    private VuforiaTrackables relicTrackables;
     //creates variables all motors and sensors
     private DcMotor LeftDrive = null;
     private DcMotor RightDrive = null;
@@ -28,7 +35,7 @@ public class RobotClass {
 
     //the hardware map is used to find all the hardware in the configuration file
     private HardwareMap hardwareMap;
-
+    private VuforiaLocalizer vuforia;
     public RobotClass(HardwareMap hwMap) {
         //declares all the hardware
         hardwareMap = hwMap;
@@ -44,16 +51,35 @@ public class RobotClass {
         //sets the direction of the left driving motor and left motor of the slide
         //REVERSE, because they should work as a mirror of the right motors.
         LeftSlide.setDirection(DcMotorSimple.Direction.REVERSE);
-
+        RightDrive.setDirection(DcMotorSimple.Direction.REVERSE);
 
         LeftDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         RightDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         LeftDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         RightDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
+        int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id",hardwareMap.appContext.getPackageName());
+        VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
+        parameters.vuforiaLicenseKey="ASiMf5b/////AAAAGXu3GpDBREYDkjYzM7FbmIBBt+NhGbrrD5mJMRFaf1hRyMwQ3lvq8VBsNgK5nHHRLwiD1KWo8Gn5S1u1eF320dEo5eGYV7vXI0Q767yl5Rm2QsfCyjnXEkDhnuNa8z/9yUUdHoGF7zRaJUZ+wMrpDMQ1pvqLsOb6MpB6yB4c+/DG3g0Je2ZRYh1yGxuotJthbWx/CJ6VQC6BkSJyH9KSM6jg/GS2f4DMG2NOa4vOVbfmKlhxQFnAcL0BdJ/VMydtI6tZCCxA4rRooI3BrrIDWry6WY3BCT/fkyia9YziqWTnZkbBbCZgEyjAHMOerHLMCnLZsbQMYaiBEfv/IacivTDYO4PckdsEdELoFUb+49MB\n";
+        parameters.cameraDirection= VuforiaLocalizer.CameraDirection.BACK;
+        this.vuforia= ClassFactory.createVuforiaLocalizer(parameters);
+        relicTrackables = this.vuforia.loadTrackablesFromAsset("RelicVuMark");
+         relicTemplate = relicTrackables.get(0);
+        relicTrackables.activate();
+    }
+    public RelicRecoveryVuMark vuforia(){
+        RelicRecoveryVuMark vuMark= RelicRecoveryVuMark.from(relicTemplate);
+        return vuMark;
     }
 
+    public void DriveDistance(double distance, double power){
+        double position = distance / ONE_TICK_TO_CM;
 
+        while(position > LeftDrivef.getCurrentPosition()){
+            Drive(0.4,0.4);
+        }
+
+    }
     public void Drive(double powerRight, double powerLeft) {
         LeftDrive.setPower(powerLeft);
         RightDrive.setPower(powerRight);
