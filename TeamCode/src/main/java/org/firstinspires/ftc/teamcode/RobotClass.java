@@ -22,7 +22,7 @@ public class RobotClass {
     private final static double WHEEL_CIRCUMFERENCE = 2 * Math.PI * 5.08;
     private final static double TICKS_PER_REV = 1120;
     private final static double ONE_TICK_TO_CM = WHEEL_CIRCUMFERENCE / TICKS_PER_REV;
-    private final double TICKS_PER_CM=TICKS_PER_REV/WHEEL_CIRCUMFERENCE;
+    private final double TICKS_PER_CM=(TICKS_PER_REV/WHEEL_CIRCUMFERENCE);
     private VuforiaTrackable relicTemplate;
     private VuforiaTrackables relicTrackables;
     //creates variables all motors and sensors
@@ -135,10 +135,10 @@ public class RobotClass {
         LeftDrivef.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         //sets the target position to each motor
-        LeftDrive.setTargetPosition(LeftDrive.getCurrentPosition()+(int) ticksToGo);
-        RightDrive.setTargetPosition(RightDrive.getCurrentPosition()+(int) ticksToGo);
-        LeftDrivef.setTargetPosition(LeftDrivef.getCurrentPosition()+(int) ticksToGo);
-        RightDrivef.setTargetPosition(RightDrivef.getCurrentPosition()+(int) ticksToGo);
+        LeftDrive.setTargetPosition(LeftDrive.getCurrentPosition()-(int) ticksToGo);
+        RightDrive.setTargetPosition(RightDrive.getCurrentPosition()-(int) ticksToGo);
+        LeftDrivef.setTargetPosition(LeftDrivef.getCurrentPosition()-(int) ticksToGo);
+        RightDrivef.setTargetPosition(RightDrivef.getCurrentPosition()-(int) ticksToGo);
 
         //sets the mode to RUN_TO_POSITION, so each motor will move to his target position
         LeftDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -173,10 +173,11 @@ public class RobotClass {
     }
 
 
-    public void Turn(double power, double Angle) {
+    public void Turn(double power, double Angle, double x) {
         //calculates how many ticks are needed to derive the requested distance
-        double drive=(((Angle)/360)*CIRCU);
-        double ticksToGo= drive*TICKS_PER_CM;
+        double drive=(CIRCU/360)*Angle;
+
+        double ticksToGo= drive*TICKS_PER_CM*x;
         //sets the mode to STOP_AND_RESET_ENCODER
         LeftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         RightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -185,9 +186,9 @@ public class RobotClass {
 
         //sets the target position to each motor
         LeftDrive.setTargetPosition(LeftDrive.getCurrentPosition()+(int) ticksToGo);
-        RightDrive.setTargetPosition(RightDrive.getCurrentPosition()+(int) ticksToGo);
-        LeftDrivef.setTargetPosition(-(LeftDrivef.getCurrentPosition()+(int) ticksToGo));
-        RightDrivef.setTargetPosition(-(RightDrivef.getCurrentPosition()+(int) ticksToGo));
+        RightDrive.setTargetPosition(RightDrive.getCurrentPosition()-(int) ticksToGo);
+        LeftDrivef.setTargetPosition((LeftDrivef.getCurrentPosition()+(int) ticksToGo));
+        RightDrivef.setTargetPosition((RightDrivef.getCurrentPosition()-(int) ticksToGo));
 
         //sets the mode to RUN_TO_POSITION, so each motor will move to his target position
         LeftDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -195,11 +196,12 @@ public class RobotClass {
         LeftDrivef.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         RightDrivef.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
+
         //drives each motor to the target position
         LeftDrive.setPower(power);
         LeftDrivef.setPower(power);
-        RightDrivef.setPower(power);
-        RightDrive.setPower(power);
+        RightDrivef.setPower(-power);
+        RightDrive.setPower(-power);
 
         while (LeftDrive.isBusy() && RightDrive.isBusy() && LeftDrivef.isBusy() && RightDrivef.isBusy()) {
             telemetry.addData("Mode","RUNNING!");
@@ -251,4 +253,9 @@ public class RobotClass {
 
         return (P * kp + I * ki + D * kd);
     }
+
+    public void setmotorpower (double power, double turn) {
+        Drive(0.8 *power + 0.6*turn, 0.8 *power - 0.6*turn);
+    }
 }
+

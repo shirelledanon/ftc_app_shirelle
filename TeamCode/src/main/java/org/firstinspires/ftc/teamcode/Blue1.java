@@ -7,11 +7,10 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
 
 /**
- * Created by talyo on 19/12/2017.
+ * Created by Shirelle on 12/27/2017.
  */
-@Autonomous(name = "Autonomous final")
-public class AutonomousProg extends LinearOpMode {
-
+@Autonomous(name = "Blue 1")
+public class Blue1 extends LinearOpMode {
     ElapsedTime runtime = new ElapsedTime();
 
 
@@ -24,39 +23,45 @@ public class AutonomousProg extends LinearOpMode {
         waitForStart();
         runtime.reset();
 
-        while (runtime.time() < 1.5) {
+        while (runtime.time() < 3) {
             Robot.Drive(0, 0);
             telemetry.addData("the visible vumark is", Robot.vuforia());
             telemetry.update();
             side = Robot.vuforia();
         }
+        Robot.DriveByTime(-0.15, -0.15, 1300);
+        Robot.DriveByTime(0.2, 0.2, 1600);
+        Robot.StopRobot(100);
         runtime.reset();
         switch (side) {
+
             case UNKNOWN:
 
+                Robot.DriveByCm(0.3, 37);
+                break;
             case LEFT:
-                runtime.reset();
-                Robot.DriveByTime(0.3, 0.3, 1000);
+
+                Robot.DriveByCm(0.3, 55);
+                break;
             case RIGHT:
-                runtime.reset();
-                Robot.DriveByTime(0.3, 0.3, 500);
+
+                Robot.DriveByCm(0.3, 17);
+                break;
             case CENTER:
-                runtime.reset();
-                while (runtime.time() < 0.75)
-                    Robot.Drive(0.3, 0.3);
 
-
+                Robot.DriveByCm(0.3, 37);
+                break;
         }
 
 
+        Robot.Turn(-0.3, 86, 1.27);
         Robot.StopRobot(100);
-        Robot.DriveByTime(0.3, -0.3, 400);
-        Robot.StopRobot(100);
-        Robot.DriveByTime(0.3, 0.3, 400);
-        Robot.StopRobot(100);
-        Robot.setSlidePower(0.8);
+        Robot.DriveByCm(0.3, 25);
+        runtime.reset();
+        while (runtime.time() < 4) {
+            Robot.setSlidePower(-1);
+        }
+
+
     }
 }
-
-
-
